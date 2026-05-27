@@ -1,4 +1,6 @@
 export const QUERY_KEYS = {
-  FAVORITES: 'favorites',
   POKEMON: 'pokemon',
+  GENERATION: 'generation',
+  FINAL_EVOLUTIONS: 'final-evolutions',
+  ALL_NAMES: 'all-names',
 } as const

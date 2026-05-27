@@ -1223,7 +1223,7 @@ select {
 }
 .combobox-input {
   width: 100%;
-  font-size: 15px;
+  font-size: 16px !important;
   padding: 10px 12px;
 }
 .combobox-list {

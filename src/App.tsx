@@ -8,7 +8,7 @@ type Mode = 'browse' | 'quiz'
 function App() {
   // A shared challenge link should open straight into the quiz.
   const [mode, setMode] = useState<Mode>(() =>
-    window.location.hash.includes('challenge=') ? 'quiz' : 'browse',
+    new URLSearchParams(window.location.search).has('challenge') ? 'quiz' : 'browse',
   )
 
   return (

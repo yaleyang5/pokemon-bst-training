@@ -1353,10 +1353,120 @@ select {
 .result-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .result-actions .reset-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* ---------- Multi-round: rounds control + scorecard ---------- */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.stepper-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-bg);
+  color: var(--text-h);
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.stepper-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.stepper-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.stepper-value {
+  min-width: 28px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--text-h);
+}
+.score-summary {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+}
+.score-summary > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.score-num {
+  font-family: var(--mono);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.score-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+.scorecard {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.scorecard-row {
+  display: grid;
+  grid-template-columns: 22px 36px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+}
+.scorecard-row--ok {
+  border-color: rgba(22, 163, 74, 0.4);
+  background: rgba(22, 163, 74, 0.08);
+}
+.scorecard-row--no {
+  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 0.07);
+}
+.scorecard-num {
+  font-family: var(--mono);
+  color: var(--muted);
+}
+.scorecard-sprite {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+.scorecard-name {
+  text-transform: capitalize;
+  color: var(--text-h);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scorecard-result {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 /* ---------- Quiz round bar (restart) ---------- */

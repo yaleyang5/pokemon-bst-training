@@ -18,7 +18,12 @@ type Props = {
   /** Whether the guess dropdown offers every Pokémon vs only the pool. */
   guessFromAll: boolean
   onGuessFromAll: (value: boolean) => void
+  /** How many Pokémon to guess in a row before the final score. */
+  rounds: number
+  onRounds: (value: number) => void
 }
+
+export const MAX_ROUNDS = 10
 
 export function QuizPool({
   source,
@@ -30,6 +35,8 @@ export function QuizPool({
   finalLoading,
   guessFromAll,
   onGuessFromAll,
+  rounds,
+  onRounds,
 }: Props) {
   const lists = useLists()
 
@@ -95,6 +102,36 @@ export function QuizPool({
           {guessFromAll
             ? 'The dropdown lists every Pokémon, not just the pool.'
             : 'The dropdown lists only Pokémon in the pool above.'}
+        </p>
+
+        <div className="setting-row">
+          <span className="setting-label">Number of rounds</span>
+          <div className="stepper">
+            <button
+              type="button"
+              className="stepper-btn"
+              onClick={() => onRounds(Math.max(1, rounds - 1))}
+              disabled={rounds <= 1}
+              aria-label="Fewer Pokémon"
+            >
+              −
+            </button>
+            <span className="stepper-value">{rounds}</span>
+            <button
+              type="button"
+              className="stepper-btn"
+              onClick={() => onRounds(Math.min(MAX_ROUNDS, rounds + 1))}
+              disabled={rounds >= MAX_ROUNDS}
+              aria-label="More Pokémon"
+            >
+              +
+            </button>
+          </div>
+        </div>
+        <p className="hint-text">
+          {rounds === 1
+            ? 'One Pokémon, then your result.'
+            : `Guess ${rounds} Pokémon in a row, then see your score.`}
         </p>
       </div>
     </div>

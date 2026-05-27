@@ -1,13 +1,11 @@
-import { useState } from 'react'
 import type { PokemonSummary } from '../api/pokemon'
 import { GENERATIONS } from '../constants/pokemon'
-import { usePokemonQuery } from '../hooks/usePokemon'
 import { describeFilters, type PokemonFilters } from '../util/filters'
-import { describeSettings, type QuizSettings } from '../util/quiz'
+import { MAX_ATTEMPTS, describeSettings, type QuizSettings } from '../util/quiz'
 import { buildShareUrl, type Challenge } from '../util/share'
-import { CryButton } from './CryButton'
 import { EmojiConfetti } from './EmojiConfetti'
-import { StatBars } from './StatBars'
+import { RevealedPokemon } from './RevealedPokemon'
+import { ShareButton } from './ShareButton'
 
 type Guess = { id: number; name: string; correct: boolean }
 
@@ -40,28 +38,29 @@ export function QuizResult({
   guessFromAll,
   onPlayAgain,
 }: Props) {
-  const { data: detail } = usePokemonQuery(target.id)
-  const [copied, setCopied] = useState(false)
-
-  const share = async () => {
-    const challenge: Challenge = {
-      v: 1,
-      pokemonId: target.id,
-      generations,
-      filters,
-      finalOnly,
-      settings,
-      guessFromAll,
-      ...(listIds ? { listIds } : {}),
-    }
-    try {
-      await navigator.clipboard.writeText(buildShareUrl(challenge))
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      setCopied(false)
-    }
+  const challenge: Challenge = {
+    v: 1,
+    pokemonIds: [target.id],
+    generations,
+    filters,
+    finalOnly,
+    settings,
+    guessFromAll,
+    ...(listIds ? { listIds } : {}),
   }
+  const url = buildShareUrl(challenge)
+
+  // Wordle-style: one square per guess (red = wrong, green = the solve), the
+  // outcome, and the link — without naming the Pokémon.
+  const squares =
+    guesses.map((g) => (g.correct ? '🟩' : '🟥')).join('') +
+    '⬜'.repeat(Math.max(0, MAX_ATTEMPTS - guesses.length))
+  const headline = won
+    ? `Solved using ${guesses.length}/${MAX_ATTEMPTS} guesses`
+    : gaveUp
+      ? 'Gave up 🏳️'
+      : 'Ran out of attempts'
+  const resultText = `Pokémon Base Stat Quiz\n${headline}:\n${squares ?? ''}\n${url}`
 
   const poolChips = [
     ...(listIds
@@ -83,43 +82,10 @@ export function QuizResult({
           ? `Solved in ${guesses.length} ${guesses.length === 1 ? 'guess' : 'guesses'}! 🎉`
           : gaveUp
             ? 'You gave up – it was...'
-            : 'Out of attempts – it was...'}
+            : 'You ran out of attempts – it was...'}
       </p>
 
-      <div className="quiz-card">
-        <div className="quiz-sprite-box">
-          <img src={target.sprite} alt={target.name} className="quiz-img" />
-        </div>
-        <span className="pokemon-id">
-          #{String(target.id).padStart(4, '0')} · Gen {target.generation}
-        </span>
-        <h3 className="quiz-name">{target.name}</h3>
-        <div className="types">
-          {target.types.map((t) => (
-            <span key={t} className={`type type-${t}`}>
-              {t}
-            </span>
-          ))}
-        </div>
-        <StatBars stats={target.stats} bst={target.bst} highlight="bst" />
-        <CryButton src={detail?.cries?.latest ?? null} />
-        {detail && (
-          <div className="meta">
-            <div>
-              <span className="meta-label">Height</span>
-              <span>{detail.height / 10} m</span>
-            </div>
-            <div>
-              <span className="meta-label">Weight</span>
-              <span>{detail.weight / 10} kg</span>
-            </div>
-            <div>
-              <span className="meta-label">Abilities</span>
-              <span>{detail.abilities.map((a) => a.ability.name).join(', ')}</span>
-            </div>
-          </div>
-        )}
-      </div>
+      <RevealedPokemon target={target} />
 
       {guesses.length > 0 && (
         <ol className="guess-log">
@@ -158,9 +124,8 @@ export function QuizResult({
         <button type="button" className="primary-btn" onClick={onPlayAgain}>
           ↻ Play again
         </button>
-        <button type="button" className="reset-btn" onClick={share}>
-          {copied ? 'Link copied!' : 'Share this challenge'}
-        </button>
+        <ShareButton label="Share result" text={resultText} />
+        <ShareButton label="Share this challenge" text={url} />
       </div>
     </div>
   )

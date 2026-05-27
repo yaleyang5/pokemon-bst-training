@@ -74,7 +74,7 @@ export function QuizPool({
                 onChange={(e) => onFinalOnly(e.target.checked)}
               />
               <span>Final evolutions only</span>
-              {finalLoading && <span className="hint-text">loading…</span>}
+              {finalLoading && <span className="hint-text">loading...</span>}
             </label>
           </>
         ) : (

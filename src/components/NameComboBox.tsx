@@ -65,7 +65,7 @@ export function NameComboBox({ options, onSelect, disabled = false, showSprites 
       <input
         type="text"
         className="combobox-input"
-        placeholder={disabled ? 'No Pokémon left to guess' : 'Type or pick a Pokémon…'}
+        placeholder={disabled ? 'No Pokémon left to guess' : 'Type or pick a Pokémon...'}
         value={query}
         disabled={disabled}
         onChange={(e) => {

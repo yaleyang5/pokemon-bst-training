@@ -28,6 +28,9 @@ export function BrowseMode() {
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [multiSelect, setMultiSelect] = useState(false)
   const [picked, setPicked] = useState<Set<number>>(new Set())
+  // Mobile only: the sidebar is hidden inline and opens as a bottom sheet. This
+  // tracks the Lists view being opened (the detail view opens via selectedId).
+  const [listsOpen, setListsOpen] = useState(false)
 
   const { pokemon, isLoading, isError, progress } = useGenerationSummaries(generations)
 
@@ -73,6 +76,14 @@ export function BrowseMode() {
     })
   }
 
+  // On mobile the sidebar is a bottom sheet (detail or lists); tapping the
+  // dimmed backdrop dismisses whichever is open.
+  const sheetOpen = (selected !== null && selectedIndex >= 0) || listsOpen
+  const closeSheet = () => {
+    setSelectedId(null)
+    setListsOpen(false)
+  }
+
   return (
     <div className="browse">
       <div className="browse-main">
@@ -90,7 +101,7 @@ export function BrowseMode() {
             </label>
             <input
               type="search"
-              placeholder="Search by name…"
+              placeholder="Search by name..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -133,6 +144,18 @@ export function BrowseMode() {
           >
             {multiSelect ? 'Done' : 'Multi-select'}
           </button>
+
+          {/* Mobile-only: opens the lists sidebar as a bottom sheet (hidden on desktop). */}
+          <button
+            type="button"
+            className="filters-toggle lists-toggle"
+            onClick={() => {
+              setSelectedId(null)
+              setListsOpen(true)
+            }}
+          >
+            Lists
+          </button>
         </div>
 
         {showFilters && <FilterControls filters={filters} onChange={setFilters} />}
@@ -162,7 +185,7 @@ export function BrowseMode() {
             {generations.length === 0 ? (
               <span className="muted">Pick at least one generation above.</span>
             ) : isLoading ? (
-              <span className="muted">Loading Pokémon… {Math.round(progress * 100)}%</span>
+              <span className="muted">Loading Pokémon... {Math.round(progress * 100)}%</span>
             ) : isError ? (
               <span className="error">Some Pokémon failed to load — try toggling the generation.</span>
             ) : (
@@ -191,7 +214,7 @@ export function BrowseMode() {
         )}
       </div>
 
-      <aside className="browse-side panel">
+      <aside className={`browse-side panel ${listsOpen ? 'browse-side--open' : ''}`}>
         {selected && selectedIndex >= 0 ? (
           <PokemonDetailPanel
             pokemon={selected}
@@ -204,11 +227,18 @@ export function BrowseMode() {
           />
         ) : (
           <>
-            <h2>Your lists</h2>
+            <div className="sheet-head">
+              <h2>Your lists</h2>
+              <button type="button" className="sheet-close" onClick={() => setListsOpen(false)}>
+                Done
+              </button>
+            </div>
             <ListsPanel lookup={lookup} onSelect={setSelectedId} />
           </>
         )}
       </aside>
+
+      {sheetOpen && <div className="sheet-backdrop" onClick={closeSheet} aria-hidden="true" />}
     </div>
   )
 }

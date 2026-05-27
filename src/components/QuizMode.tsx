@@ -196,7 +196,7 @@ export function QuizMode() {
             </span>
           ) : poolLoading ? (
             <span className="muted">
-              Loading {finalLoading ? 'evolution data' : 'pool'}…{' '}
+              Loading {finalLoading ? 'evolution data' : 'pool'}...{' '}
               {isGens && !finalLoading && `${Math.round(genSummaries.progress * 100)}%`}
             </span>
           ) : (
@@ -232,7 +232,7 @@ export function QuizMode() {
             <p className="muted">
               {sharedReady
                 ? 'Someone shared a challenge with you — the exact Pokémon, filters, and reveal settings are loaded on the left.'
-                : 'Loading the shared challenge…'}
+                : 'Loading the shared challenge...'}
             </p>
             <button type="button" className="primary-btn" onClick={startShared} disabled={!sharedReady}>
               Start shared challenge
@@ -297,13 +297,13 @@ export function QuizMode() {
                   {reveal.height && (
                     <div>
                       <span className="meta-label">Height</span>
-                      <span>{targetDetail.data ? `${targetDetail.data.height / 10} m` : '…'}</span>
+                      <span>{targetDetail.data ? `${targetDetail.data.height / 10} m` : '...'}</span>
                     </div>
                   )}
                   {reveal.weight && (
                     <div>
                       <span className="meta-label">Weight</span>
-                      <span>{targetDetail.data ? `${targetDetail.data.weight / 10} kg` : '…'}</span>
+                      <span>{targetDetail.data ? `${targetDetail.data.weight / 10} kg` : '...'}</span>
                     </div>
                   )}
                   {reveal.ability && (
@@ -312,7 +312,7 @@ export function QuizMode() {
                       <span>
                         {targetDetail.data
                           ? targetDetail.data.abilities.map((a) => a.ability.name).join(', ')
-                          : '…'}
+                          : '...'}
                       </span>
                     </div>
                   )}

@@ -32,7 +32,7 @@ export function PokemonDetailPanel({
     <div className="detail detail--panel">
       <div className="detail-nav">
         <button type="button" className="link-btn" onClick={onClose}>
-          ← Back to lists
+          ← Back
         </button>
         <div className="detail-stepper">
           <button type="button" className="icon-btn" onClick={onPrev} disabled={!hasPrev} aria-label="Previous">
@@ -69,16 +69,16 @@ export function PokemonDetailPanel({
       <div className="meta">
         <div>
           <span className="meta-label">Height</span>
-          <span>{detail ? `${detail.height / 10} m` : isLoading ? '…' : '—'}</span>
+          <span>{detail ? `${detail.height / 10} m` : isLoading ? '...' : '—'}</span>
         </div>
         <div>
           <span className="meta-label">Weight</span>
-          <span>{detail ? `${detail.weight / 10} kg` : isLoading ? '…' : '—'}</span>
+          <span>{detail ? `${detail.weight / 10} kg` : isLoading ? '...' : '—'}</span>
         </div>
         <div>
           <span className="meta-label">Abilities</span>
           <span>
-            {detail ? detail.abilities.map((a) => a.ability.name).join(', ') : isLoading ? '…' : '—'}
+            {detail ? detail.abilities.map((a) => a.ability.name).join(', ') : isLoading ? '...' : '—'}
           </span>
         </div>
       </div>

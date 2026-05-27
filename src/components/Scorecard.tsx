@@ -30,7 +30,7 @@ export function Scorecard({ outcomes, challenge, onPlayAgain }: Props) {
   const squares = outcomes.map((o) => (o.solved ? '🟩' : '🟥')).join('')
   const resultText =
     url &&
-    `Pokémon Base Stat Quiz\nSolved ${solved}/${total} rounds · ${totalGuesses} ${totalGuesses === 1 ? 'guess' : 'guesses'}\n${squares}\n${url}`
+    `Pokémon Base Stat Quiz\nSolved ${solved}/${total} rounds\n${outcomes.map((o) => (o.guessCount)).join('/')} · ${totalGuesses} ${totalGuesses === 1 ? 'guess' : 'guesses'}\n${squares}\n${url}`
 
   return (
     <div className="quiz-result">

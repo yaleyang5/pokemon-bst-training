@@ -603,11 +603,14 @@ select {
   color: #fff;
 }
 .addlist-menu {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  z-index: 20;
+  /* Positioned in JS (fixed coords clamped to the viewport) so it never spills
+     off-screen from cards near an edge — see AddToListMenu.tsx. */
+  position: fixed;
+  z-index: 60;
   width: 220px;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
   background: var(--panel-bg);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
@@ -1573,6 +1576,16 @@ select {
 
 /* Stacked single-column layout (matches the grid collapse above). */
 @media (max-width: 980px) {
+  /* Mobile Safari zooms toward any field whose text is under 16px on focus.
+     Bump every form control to 16px so focusing one never triggers a zoom.
+     !important so it beats the component-scoped input rules (e.g. .addlist-new
+     input), which otherwise out-specify a bare `input` selector. */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
   /* Put the quiz stage (mystery card / Start / result) above the long setup,
      drop the tall min-height so the idle state isn't a big empty gap, and let
      the setup flow rather than stick. */

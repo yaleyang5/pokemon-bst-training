@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { listsStore, useLists } from '../hooks/useLists'
 
 type Props = {
@@ -12,8 +12,44 @@ export function AddToListMenu({ pokemonId, variant = 'compact' }: Props) {
   const [open, setOpen] = useState(false)
   const [draftName, setDraftName] = useState('')
   const rootRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const memberCount = lists.filter((l) => l.pokemonIds.includes(pokemonId)).length
+
+  // Position the menu as a fixed popover, clamped to the viewport so cards near
+  // an edge don't push it off-screen. Done imperatively (a DOM sync) and kept in
+  // step with scroll/resize while open. It renders hidden until placed.
+  useLayoutEffect(() => {
+    if (!open) return
+    const place = () => {
+      const trigger = triggerRef.current
+      const menu = menuRef.current
+      if (!trigger || !menu) return
+      const t = trigger.getBoundingClientRect()
+      const m = menu.getBoundingClientRect()
+      const margin = 8
+      // Align the menu's right edge with the trigger, then clamp horizontally.
+      const maxLeft = window.innerWidth - m.width - margin
+      const left = Math.max(margin, Math.min(t.right - m.width, maxLeft))
+      // Below the trigger, flipping above if it would run off the bottom.
+      let top = t.bottom + 6
+      if (top + m.height > window.innerHeight - margin) {
+        const above = t.top - m.height - 6
+        top = above >= margin ? above : Math.max(margin, window.innerHeight - m.height - margin)
+      }
+      menu.style.top = `${top}px`
+      menu.style.left = `${left}px`
+      menu.style.visibility = 'visible'
+    }
+    place()
+    window.addEventListener('resize', place)
+    window.addEventListener('scroll', place, true)
+    return () => {
+      window.removeEventListener('resize', place)
+      window.removeEventListener('scroll', place, true)
+    }
+  }, [open, lists.length])
 
   useEffect(() => {
     if (!open) return
@@ -40,6 +76,7 @@ export function AddToListMenu({ pokemonId, variant = 'compact' }: Props) {
   return (
     <div className="addlist" ref={rootRef}>
       <button
+        ref={triggerRef}
         type="button"
         className={variant === 'compact' ? 'addlist-trigger addlist-trigger--compact' : 'addlist-trigger addlist-trigger--full'}
         aria-haspopup="menu"
@@ -60,7 +97,13 @@ export function AddToListMenu({ pokemonId, variant = 'compact' }: Props) {
       </button>
 
       {open && (
-        <div className="addlist-menu" role="menu" onClick={(e) => e.stopPropagation()}>
+        <div
+          ref={menuRef}
+          className="addlist-menu"
+          role="menu"
+          style={{ visibility: 'hidden' }}
+          onClick={(e) => e.stopPropagation()}
+        >
           {lists.length === 0 && <p className="hint-text addlist-empty">No lists yet — create one below.</p>}
           {lists.map((list) => {
             const checked = list.pokemonIds.includes(pokemonId)

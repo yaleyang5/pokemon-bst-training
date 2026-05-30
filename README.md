@@ -1,5 +1,7 @@
 # Pokémon Base Stat Quiz
 
+**Live at <https://pokemon-bst-training.vercel.app/>**
+
 A small app for learning Pokémon **base stats** and quizzing yourself on them, built on
 [PokéAPI](https://pokeapi.co/). Two modes:
 

@@ -5,12 +5,12 @@
 A small app for learning Pokémon **base stats** and quizzing yourself on them, built on
 [PokéAPI](https://pokeapi.co/). Two modes:
 
-- **Browse & Lists** — page through generations I–IX, sort by Pokédex #, name, BST, or any single
+- **Browse & Lists**: page through generations I–IX, sort by Pokédex #, name, BST, or any single
   base stat (both directions), filter by type / BST / individual stats, and search by name
   (contains, or "starts with"). Selecting a Pokémon shows its stat spread in the sidebar, with
   prev/next navigation so the bars animate as you move through the list. Organize Pokémon into your
   own custom lists, persisted in `localStorage`.
-- **Quiz** — name-the-Pokémon from its base-stat graph. A random Pokémon is drawn from the filtered
+- **Quiz**: name-the-Pokémon from its base-stat graph. A random Pokémon is drawn from the filtered
   pool; you get **5 attempts**, picking names from a searchable dropdown (no repeats). Reveal
   options control difficulty (image hide/blur/show, plus height, weight, type, ability), and you can
   restrict the pool to **final evolutions only**. The result screen records the settings + filters
